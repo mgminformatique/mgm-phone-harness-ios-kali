@@ -1,0 +1,42 @@
+#!/bin/sh
+set -eu
+
+project_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+installer_bin="${CARGO_TARGET_DIR:-$project_dir/installer/target}/release/mgm-ios-installer"
+
+case "${1:-help}" in
+    installer)
+        shift
+        if [ ! -x "$installer_bin" ]; then
+            printf '%s\n' 'Installateur absent. Lance ./mgm-ios-kali build.' >&2
+            exit 1
+        fi
+        exec "$installer_bin" "$@"
+        ;;
+    phone)
+        shift
+        exec python3 -B "$project_dir/phone-harness/cli.py" "$@"
+        ;;
+    build)
+        shift
+        exec cargo build --manifest-path "$project_dir/installer/Cargo.toml" --release --locked "$@"
+        ;;
+    test)
+        shift
+        python3 -B -m unittest discover -s "$project_dir/tests" -v
+        exec cargo test --manifest-path "$project_dir/installer/Cargo.toml" --release --locked "$@"
+        ;;
+    help|-h|--help)
+        cat <<'HELP'
+MGM Phone-Harness iOS-Kali
+  mgm-ios-kali installer --help    Signature, prévol, installation et reçus
+  mgm-ios-kali phone --help        Phone Harness USB et visionneuse iPhone
+  mgm-ios-kali build               Compiler l’installateur local
+  mgm-ios-kali test                Vérifier les deux composants
+HELP
+        ;;
+    *)
+        printf '%s\n' 'Sous-commande inconnue. Consulte ./mgm-ios-kali --help.' >&2
+        exit 2
+        ;;
+esac
