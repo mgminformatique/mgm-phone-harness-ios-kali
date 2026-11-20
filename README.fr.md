@@ -6,13 +6,13 @@ Observe et teste un iPhone branché en USB depuis Kali Linux. Codex peut lire l�
 
 ## Démo Codex
 
-> Ouvre l’app de recette, active le mode démo et vérifie son état.
+> Réserve un taxi vers l’aéroport, puis un vol pour Toronto.
 
-Codex ouvre l’app avec l’accord de l’opérateur, lit les libellés d’accessibilité, envoie un appui confirmé, puis vérifie le nouvel état. La démo de 23 secondes utilise un iPhone simulé.
+À gauche, les commandes de Codex. À droite, l’écran de l’iPhone. Codex ouvre l’app de taxi, vérifie le trajet vers l’aéroport, puis passe à l’app de vols et choisit un vol direct vers Toronto. L’opérateur approuve chaque action et Codex relit les deux confirmations sur le téléphone. La démo de 38 secondes utilise un iPhone et des réservations simulés.
 
-![Codex ouvre une app de recette sur un iPhone simulé, repère le mode démo, envoie un appui après confirmation et vérifie que le mode est actif.](media/codex-demo-fr.gif)
+![Le terminal Codex pilote un iPhone simulé par USB. Le téléphone affiche le trajet et la confirmation du taxi, puis les vols, la validation et le billet de recette.](media/codex-demo-fr.gif)
 
-[Télécharger la démo MP4 en français](https://github.com/mgminformatique/mgm-phone-harness-ios-kali/releases/download/v0.1.0/mgm-phone-harness-ios-kali-codex-fr.mp4)
+[Télécharger la démo MP4 en français](https://github.com/mgminformatique/mgm-phone-harness-ios-kali/releases/download/v0.1.0/mgm-phone-harness-ios-kali-codex-travel-fr.mp4)
 
 ## Démarrage
 

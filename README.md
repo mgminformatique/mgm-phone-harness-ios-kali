@@ -6,13 +6,13 @@ Inspect and test an iPhone over USB from Kali Linux. Codex can read the screen, 
 
 ## Codex demo
 
-> Open the test app, turn on Demo Mode, and check that it’s on.
+> Book a taxi to the airport, then book a flight to Toronto.
 
-Codex opens the app with the operator’s approval, reads the accessibility labels, sends one confirmed tap, then checks the new state. This 23-second demo uses a simulated iPhone.
+Watch Codex’s commands on the left and the iPhone screen on the right. Codex opens the taxi app, reviews the airport ride, then switches to the flight app and selects a nonstop flight to Toronto. The operator approves each action, and Codex reads both confirmations back from the phone. The 38-second demo uses a simulated iPhone and test bookings.
 
-![Codex opens a test app on a simulated iPhone, finds Demo Mode, taps its switch after approval and verifies that it is on.](media/codex-demo-en.gif)
+![A Codex terminal controls a simulated iPhone over USB. The phone shows a taxi route and booking confirmation, then flight results, checkout and a test ticket.](media/codex-demo-en.gif)
 
-[Download the English MP4](https://github.com/mgminformatique/mgm-phone-harness-ios-kali/releases/download/v0.1.0/mgm-phone-harness-ios-kali-codex-en.mp4)
+[Download the English MP4](https://github.com/mgminformatique/mgm-phone-harness-ios-kali/releases/download/v0.1.0/mgm-phone-harness-ios-kali-codex-travel-en.mp4)
 
 ## Getting started
 
