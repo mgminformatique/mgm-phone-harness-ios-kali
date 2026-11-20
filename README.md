@@ -1,24 +1,28 @@
 # MGM Phone-Harness iOS-Kali
 
-Observe et teste un iPhone branché en USB depuis Kali Linux. Le même lanceur permet de préparer, de vérifier et d’installer une mise à jour IPA de MGM Agent Admin.
+**English** · [Français](README.fr.md)
 
-## Démo
+Inspect and test an iPhone over USB from Kali Linux. Codex can read the screen, open a test app and carry out a task with the operator’s approval. The same launcher prepares, checks and installs MGM Agent Admin IPA updates.
 
-**Scénario.** Détecter un iPhone de recette, lire le libellé d’un bouton, confirmer un appui, puis contrôler le profil d’une IPA avant le transfert.
+## Codex demo
 
-![Démo simulée de 21 secondes de MGM Phone-Harness iOS-Kali. Le terminal affiche la détection USB, la lecture d’écran, l’appui confirmé et le diagnostic de l’IPA.](media/demo.gif)
+> Open the test app, turn on Demo Mode, and check that it’s on.
 
-[Voir la démo en MP4](https://github.com/mgminformatique/mgm-phone-harness-ios-kali/releases/download/v0.1.0/mgm-phone-harness-ios-kali-demo.mp4)
+Codex opens the app with the operator’s approval, reads the accessibility labels, sends one confirmed tap, then checks the new state. This 23-second demo uses a simulated iPhone.
 
-## Démarrage
+![Codex opens a test app on a simulated iPhone, finds Demo Mode, taps its switch after approval and verifies that it is on.](media/codex-demo-en.gif)
 
-| Fonction | Prérequis |
+[Download the English MP4](https://github.com/mgminformatique/mgm-phone-harness-ios-kali/releases/download/v0.1.0/mgm-phone-harness-ios-kali-codex-en.mp4)
+
+## Getting started
+
+| Feature | Requirements |
 | --- | --- |
-| Diagnostic USB et installateur | Un iPhone jumelé au poste Kali et le service `usbmuxd`. |
-| Capture, lecture et gestes | Un iPhone déverrouillé et un pilote de test XCTest WebDriverAgent déjà provisionné et démarré. |
-| Visionneuse | Tk, Pillow, `go-ios` 1.3.2 et un tunnel développeur déjà ouvert sur la boucle locale. |
+| USB diagnostics and installer | An iPhone paired with the Kali host and the `usbmuxd` service. |
+| Screenshots, accessibility labels and gestures | An unlocked iPhone with a provisioned XCTest WebDriverAgent already running. |
+| Live viewer | Tk, Pillow, `go-ios` 1.3.2 and an active developer tunnel on the loopback interface. |
 
-Installe Git, Rust 1.89 ou une version ultérieure et les dépendances Kali, puis compile l’installateur depuis les sources.
+Install Git, Rust 1.89 or later and the Kali dependencies, then build the installer from source.
 
 ```bash
 sudo apt install build-essential pkg-config libdbus-1-dev python3 usbmuxd
@@ -33,26 +37,26 @@ cd mgm-phone-harness-ios-kali
 ./mgm-ios-kali phone --help
 ```
 
-Relève l’UDID dans le diagnostic puis définis `udid` dans le terminal. Toutes les opérations qui visent un iPhone demandent cet identifiant.
+Set the `udid` shell variable to the iPhone’s UDID shown in the USB diagnostics. Every command that targets an iPhone requires this identifier.
 
 ## Phone Harness
 
 ```bash
 ./mgm-ios-kali phone status --device "$udid"
-./mgm-ios-kali phone capture ecran.png --device "$udid"
+./mgm-ios-kali phone capture screen.png --device "$udid"
 ./mgm-ios-kali phone read --device "$udid"
 ```
 
-Ces commandes utilisent `usbmuxd` et un pilote de test XCTest WebDriverAgent déjà provisionné et démarré sur l’iPhone. L’iPhone reste déverrouillé durant le test. `driver-required` indique que le pilote de test est indisponible. `installer diagnose` permet alors de vérifier la connexion USB indépendamment.
+Keep the iPhone unlocked during the test. `driver-required` means the test driver is unavailable. Use `installer diagnose` to check the USB connection on its own.
 
-Les gestes se lancent un à la fois dans un terminal interactif. Ouvre l’image de référence avant de confirmer le geste. Les coordonnées partent du coin supérieur gauche et vont de 0 à 1. L’outil revérifie l’image, l’app active et la géométrie avant l’envoi. Si le résultat d’un geste est `unconfirmed`, vérifie son effet sur l’iPhone avant de refaire la commande.
+Run each gesture in an interactive terminal. Open the reference screenshot and enter `o` or `oui` at the confirmation prompt. Coordinates run from 0 to 1, starting at the top-left corner. The launcher rechecks the screenshot, foreground app and screen dimensions before sending the gesture. If the result is `unconfirmed`, check the iPhone before retrying.
 
 ```bash
-./mgm-ios-kali phone tap 0.5 0.4 --device "$udid" --reference ecran.png
-./mgm-ios-kali phone launch com.apple.Preferences --device "$udid" --reference ecran.png
+./mgm-ios-kali phone tap 0.5 0.4 --device "$udid" --reference screen.png
+./mgm-ios-kali phone launch com.apple.Preferences --device "$udid" --reference screen.png
 ```
 
-La visionneuse en direct reprend le service de capture développeur Apple. Elle utilise Tk, Pillow, `go-ios` 1.3.2 et le port d’un tunnel utilisateur déjà ouvert sur la boucle locale pour cet iPhone. Les captures de la visionneuse restent dans un dossier temporaire nettoyé à la fermeture.
+The live viewer uses Apple’s developer screenshot service. Set `go_ios` to the `go-ios` executable and `tunnel_port` to the port of the iPhone’s existing loopback tunnel. The viewer removes its temporary screenshots when it closes.
 
 ```bash
 ./mgm-ios-kali phone live --device "$udid" --ios "$go_ios" --tunnel-port "$tunnel_port"
@@ -66,28 +70,28 @@ La visionneuse en direct reprend le service de capture développeur Apple. Elle 
 ./mgm-ios-kali installer preflight "$ipa" --device "$udid"
 ```
 
-Le compagnon prépare les mises à jour MGM Agent Admin avec le compte développeur, la confirmation Apple et l’identité de l’application déjà installée. Pour signer une IPA MGM standard, indique ton origine Anisette dans `origine` et choisis un nouveau fichier de sortie.
+The installer prepares MGM Agent Admin updates using a developer account, Apple verification and the signing identity of the installed app. To sign a standard MGM IPA, set `origin` to your Anisette server origin and choose a new output file.
 
 ```bash
-./mgm-ios-kali installer prepare "$original" --device "$udid" --provider "$origine" --output "$signe"
-./mgm-ios-kali installer inspect "$signe" --device "$udid"
-./mgm-ios-kali installer preflight "$signe" --device "$udid"
+./mgm-ios-kali installer prepare "$original" --device "$udid" --provider "$origin" --output "$signed"
+./mgm-ios-kali installer inspect "$signed" --device "$udid"
+./mgm-ios-kali installer preflight "$signed" --device "$udid"
 ```
 
-La commande explicite `install` demande le SHA-256 de l’IPA imprimé par `inspect`. L’installateur conserve le journal natif MGM sous `${XDG_DATA_HOME:-$HOME/.local/share}/ca.mgminformatique.agent/ios-installer`. En cas d’issue incertaine, `receipts` puis `recover ID --device "$udid"` relisent l’état avant toute nouvelle installation.
+The `install` command requires the IPA’s SHA-256 digest from `inspect`. The installer stores its journal in `${XDG_DATA_HOME:-$HOME/.local/share}/ca.mgminformatique.agent/ios-installer`. If the outcome is uncertain, use `receipts` and then `recover ID --device "$udid"` to check the result before starting another installation.
 
-## Vérification locale
+## Local testing
 
-Les tests couvrent les diagnostics USB et les gestes sur un iPhone simulé, ainsi que le prévol IPA, le transfert et la reprise après interruption. La partie Python utilise Python 3.10 ou une version ultérieure. Cargo résout les dépendances à partir du verrou fourni. Les dépendances en cache permettent de lancer les tests avec `--offline`.
+Tests cover USB diagnostics and gestures on a simulated iPhone, as well as IPA preflight, transfer and recovery. The Python tools require Python 3.10 or later. Cargo uses the supplied lockfile. Pass `--offline` when the dependencies are already cached.
 
 ```bash
 ./mgm-ios-kali test
 ```
 
-L’exécutable compilé se trouve dans `installer/target/release/` par défaut. Le lanceur fonctionne depuis un autre dossier et accepte aussi le `CARGO_TARGET_DIR` configuré lors de la compilation.
+By default, the executable is built into `installer/target/release/`. The launcher works from any directory and uses the `CARGO_TARGET_DIR` configured at build time when set.
 
-## Provenance
+## Credits
 
-MGM Informatique a développé le transport iOS USB pour Kali, la visionneuse et le compagnon MGM iOS Installer. L’intégration initiale utilisait Phone Harness 0.3.3. [Projet Phone Harness en amont](https://github.com/phone-harness/phone-harness)
+MGM Informatique developed the Kali USB transport, live viewer and MGM iOS Installer. The original integration used Phone Harness 0.3.3. [Upstream Phone Harness project](https://github.com/phone-harness/phone-harness)
 
-Licences des composants utilisés dans le chantier d’origine et dans le compagnon de signature. [Licence de Phone Harness](phone-harness/LICENSE.upstream) · [Notices de l’installateur](installer/notices/README.md)
+Licenses and notices for the upstream project and installer dependencies. [Phone Harness license](phone-harness/LICENSE.upstream) · [Installer notices](installer/notices/README.md)
